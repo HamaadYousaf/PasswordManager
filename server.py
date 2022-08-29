@@ -6,7 +6,8 @@ def insert(website, username, password):
     cursor.execute(sql, (website, username, password))
     db.commit()
     insert_id = cursor.lastrowid
-    print(f"Added entry for {website} with username: {username}")
+    print("\033[92m {}\033[00m" .format(
+        f"Added entry for {website} with username: {username}"))
 
 
 def get():
@@ -14,23 +15,18 @@ def get():
     cursor.execute(sql)
     result = cursor.fetchall()
 
-    for row in result:
-        print(row)
+    return result
 
 
-def update(id, username, password):
-    sql = ("UPDATE passwords SET username = %s, pass = %s WHERE id = %s")
-    cursor.execute(sql, (username, password, id))
+def update(website, username, password):
+    sql = ("UPDATE passwords SET username = %s, pass = %s WHERE website = %s")
+    cursor.execute(sql, (username, password, website))
     db.commit()
-    print(f"Updated entry for {id}")
+    print("\033[92m {}\033[00m" .format(f"Updated entry for {website}"))
 
 
-def delete(id):
-    sql = ("DELETE FROM passwords WHERE id = %s")
-    cursor.execute(sql, (id,))
+def delete(website):
+    sql = ("DELETE FROM passwords WHERE website = %s")
+    cursor.execute(sql, (website,))
     db.commit()
-    print(f"Deleted entry for {id}")
-
-
-delete(1)
-get()
+    print("\033[92m {}\033[00m" .format(f"Deleted entry for {website}"))

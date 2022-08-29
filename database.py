@@ -1,8 +1,8 @@
 import mysql.connector
 
 config = {
-    'user': 'root',
-    'password': 'Hy_020901',
+    'user': "root",
+    'password': 'Hy_Database',
     'host': 'localhost',
     'database': 'passwordManager'
 }
