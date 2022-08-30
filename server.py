@@ -1,13 +1,26 @@
 from database import cursor, db
+from rich.console import Console
+
+console = Console()
+
+
+def getId(website):
+    try:
+        sql = ("SELECT * FROM passwords WHERE website=%s")
+        cursor.execute(sql, (website,))
+        result = cursor.fetchone()
+
+        return result[0]
+    except:
+        return None
 
 
 def insert(website, username, password):
     sql = ("INSERT INTO passwords(website, username, pass) VALUES (%s, %s, %s)")
     cursor.execute(sql, (website, username, password))
     db.commit()
-    insert_id = cursor.lastrowid
-    print("\033[92m {}\033[00m" .format(
-        f"Added entry for {website} with username: {username}"))
+    console.print(
+        f"Added entry for {website} with username: {username}", style="green")
 
 
 def get():
@@ -19,14 +32,24 @@ def get():
 
 
 def update(website, username, password):
-    sql = ("UPDATE passwords SET username = %s, pass = %s WHERE website = %s")
-    cursor.execute(sql, (username, password, website))
-    db.commit()
-    print("\033[92m {}\033[00m" .format(f"Updated entry for {website}"))
+    id = getId(website)
+    if id:
+        sql = ("UPDATE passwords SET username = %s, pass = %s WHERE id = %s")
+        cursor.execute(sql, (username, password, id))
+        db.commit()
+        console.print(f"Updated entry for {website}", style="green")
+    else:
+        console.print(
+            f"Entry for {website} does not exist.", style="bold italic")
 
 
 def delete(website):
-    sql = ("DELETE FROM passwords WHERE website = %s")
-    cursor.execute(sql, (website,))
-    db.commit()
-    print("\033[92m {}\033[00m" .format(f"Deleted entry for {website}"))
+    id = getId(website)
+    if id:
+        sql = ("DELETE FROM passwords WHERE id = %s")
+        cursor.execute(sql, (id,))
+        db.commit()
+        console.print(f"Deleted entry for {website}", style="green")
+    else:
+        console.print(
+            f"Entry for {website} does not exist.", style="bold italic")
