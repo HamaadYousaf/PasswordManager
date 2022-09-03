@@ -1,10 +1,17 @@
+import os
+from dotenv import load_dotenv
 from server import insert, get, update, delete
+from genPassword import genPassword
 from rich.console import Console
 from rich.prompt import Prompt
 from rich.table import Table
 from rich import box
+from cryptography.fernet import Fernet
 
+load_dotenv()
 console = Console()
+key = os.getenv("KEY").encode()
+f = Fernet(key)
 
 
 def addEntry():
@@ -12,12 +19,13 @@ def addEntry():
     username = input("Enter username: \n")
     genPass = input("Would you like to generate a password? (y/n) \n")
     if genPass == 'y':
-        print("Generating")
-        password = "123abc"
+        password = genPassword()
+        print(f"Generated password: {password}")
     else:
         password = input("Enter password: \n")
 
-    insert(website, username, password)
+    encrypted = f.encrypt(password.encode())
+    insert(website, username, encrypted)
 
 
 def updateEntry():
@@ -25,12 +33,13 @@ def updateEntry():
     username = input("Enter the new username: \n")
     genPass = input("Would you like to generate a password? (y/n) \n")
     if genPass == 'y':
-        print("Generating")
-        password = "123abc"
+        password = genPassword()
+        print(f"Generated password: {password}")
     else:
         password = input("Enter the new password: \n")
 
-    update(website, username, password)
+    encrypted = f.encrypt(password.encode())
+    update(website, username, encrypted)
 
 
 def deleteEntry():
@@ -55,7 +64,8 @@ def showEntries():
         table.add_column("Password", justify="center")
 
         for entry in entries:
-            table.add_row(entry[1], entry[2], entry[3])
+            decrypted = f.decrypt(entry[3].encode())
+            table.add_row(entry[1], entry[2], str(decrypted, 'utf8'))
         console.print(table)
 
 
