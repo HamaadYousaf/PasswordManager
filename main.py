@@ -7,6 +7,7 @@ from rich.prompt import Prompt
 from rich.table import Table
 from rich import box
 from cryptography.fernet import Fernet
+import pyperclip
 
 load_dotenv()
 console = Console()
@@ -24,6 +25,8 @@ def addEntry():
     else:
         password = input("Enter password: \n")
 
+    pyperclip.copy(password)
+    print('Password copied to clipboard')
     encrypted = f.encrypt(password.encode())
     insert(website, username, encrypted)
 
@@ -38,6 +41,8 @@ def updateEntry():
     else:
         password = input("Enter the new password: \n")
 
+    pyperclip.copy(password)
+    print('Password copied to clipboard')
     encrypted = f.encrypt(password.encode())
     update(website, username, encrypted)
 
@@ -70,6 +75,11 @@ def showEntries():
 
 
 def main():
+    verify = Prompt.ask("Enter the master password to begin")
+    while verify != os.getenv('MASTER_PASSWORD'):
+        verify = Prompt.ask("Enter the master password to begin")
+
+    print()
     print("---------------------MENU---------------------")
     print("1. Add an entry")
     print("2. Show all passwords")
@@ -85,7 +95,7 @@ def main():
         '4': deleteEntry
     }
 
-    val = Prompt.ask("What would you like to do?",)
+    val = Prompt.ask("What would you like to do?")
     while val != '0':
         if not val or int(val) <= 0 or int(val) > 4:
             print("Invalid input")
