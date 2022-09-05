@@ -13,3 +13,4 @@ A personal password manager/generator built using Python and MySQL.
 - All important variables secured in dotenv file.
 
 #### Demo
+<p><img align="left" alt="gif" src="https://github.com/HamaadYousaf/PasswordManager/blob/main/demo.png" width="400"/></p>
