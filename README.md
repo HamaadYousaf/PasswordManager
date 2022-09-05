@@ -11,3 +11,5 @@ A personal password manager/generator built using Python and MySQL.
 - Show all entries in table format.
 - All terminal text colored and styled using the Rich library.
 - All important variables secured in dotenv file.
+
+#### Demo
