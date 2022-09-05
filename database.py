@@ -1,10 +1,13 @@
+import os
+from dotenv import load_dotenv
 import mysql.connector
+load_dotenv()
 
 config = {
-    'user': "root",
-    'password': 'Hy_Database',
-    'host': 'localhost',
-    'database': 'passwordManager'
+    'user': os.getenv("USER"),
+    'password': os.getenv("PASSWORD"),
+    'host': os.getenv("HOST"),
+    'database': os.getenv("DATABASE")
 }
 
 db = mysql.connector.connect(**config)
